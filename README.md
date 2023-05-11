@@ -1,4 +1,4 @@
-# :trophy: DESAFIO BANCO CARREFOUR
+# :trophy: Desafio Banco Carrefour
 ## :dart: Objetivo
 
 O desafio consiste na implementação de uma aplicação Android para consumir a API
