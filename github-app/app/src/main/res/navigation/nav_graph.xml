@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/listUsersFragment">
+
+    <fragment
+        android:id="@+id/listUsersFragment"
+        android:name="br.com.hiltonsf92.githubapp.presentation.ListUsersFragment"
+        android:label="@string/app_list_users_title"
+        tools:layout="@layout/fragment_list_users">
+        <action
+            android:id="@+id/action_listUsersFragment_to_detailUserFragment"
+            app:destination="@id/detailUserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailUserFragment"
+        android:name="br.com.hiltonsf92.githubapp.presentation.DetailUserFragment"
+        android:label="@string/app_detail_user_title"
+        tools:layout="@layout/fragment_detail_user"/>
+</navigation>
