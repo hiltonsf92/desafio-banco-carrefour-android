@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/listUsersFragment">
+    app:startDestination="@id/userListFragment">
 
     <fragment
-        android:id="@+id/listUsersFragment"
-        android:name="br.com.hiltonsf92.githubapp.presentation.ListUsersFragment"
-        android:label="@string/app_list_users_title"
-        tools:layout="@layout/fragment_list_users">
+        android:id="@+id/userListFragment"
+        android:name="br.com.hiltonsf92.githubapp.presentation.UserListFragment"
+        android:label="@string/user_list_title"
+        tools:layout="@layout/fragment_user_list">
         <action
-            android:id="@+id/action_listUsersFragment_to_detailUserFragment"
-            app:destination="@id/detailUserFragment" />
+            android:id="@+id/action_userListFragment_to_userDetailFragment"
+            app:destination="@id/userDetailFragment" />
     </fragment>
     <fragment
-        android:id="@+id/detailUserFragment"
-        android:name="br.com.hiltonsf92.githubapp.presentation.DetailUserFragment"
-        android:label="@string/app_detail_user_title"
-        tools:layout="@layout/fragment_detail_user"/>
+        android:id="@+id/userDetailFragment"
+        android:name="br.com.hiltonsf92.githubapp.presentation.UserDetailFragment"
+        android:label="@string/user_detail_title"
+        tools:layout="@layout/fragment_user_detail"/>
 </navigation>

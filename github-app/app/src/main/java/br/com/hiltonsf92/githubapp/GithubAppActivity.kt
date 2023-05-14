@@ -24,7 +24,8 @@ class GithubAppActivity : AppCompatActivity() {
     }
 
     private fun setupAppBar() {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         navController = navHostFragment.navController
         appConfiguration = AppBarConfiguration(navController.graph)
         binding.appBar.setupWithNavController(navController, appConfiguration)
