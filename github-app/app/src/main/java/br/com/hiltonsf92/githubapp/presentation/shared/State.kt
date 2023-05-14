@@ -7,6 +7,13 @@ sealed class State<out T : Any> {
     data class Success<out T : Any>(val data: T) : State<T>()
     data class Error(val exception: Exception) : State<Nothing>()
 
+    val state: Any?
+        get() = when (this) {
+            is Success -> data
+            is Error -> exception
+            else -> null
+        }
+
     fun handle(
         loading: () -> Unit,
         success: (data: T) -> Unit,

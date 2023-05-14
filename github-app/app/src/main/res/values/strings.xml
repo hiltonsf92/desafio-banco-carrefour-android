@@ -2,4 +2,10 @@
     <string name="app_name">GithubApp</string>
     <string name="user_list_title">User list</string>
     <string name="user_detail_title">User detail</string>
+    <string name="user_detail_search_hint">User login</string>
+    <string name="user_detail_search_prefix">\@</string>
+    <string name="user_login_placeholder">\@%1$s</string>
+    <string name="user_repos_placeholder">repos(%1$d)</string>
+    <string name="user_info_card_button">Goto repository</string>
+    <string name="user_detail_search_error">Type something</string>
 </resources>

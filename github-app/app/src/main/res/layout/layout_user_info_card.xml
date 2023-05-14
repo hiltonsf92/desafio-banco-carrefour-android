@@ -21,8 +21,8 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:layout_height="194dp"
-                android:scaleType="centerCrop"
+                android:layout_height="260dp"
+                android:scaleType="fitXY"
                 app:srcCompat="@drawable/ic_launcher_background" />
 
             <LinearLayout
@@ -89,6 +89,15 @@
                     android:textSize="14sp"
                     tools:text="repos(0)" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/gotoRepoOutlinedButton"
+                style="@style/Widget.Material3.Button.ElevatedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginBottom="15dp"
+                android:text="@string/user_info_card_button" />
 
         </LinearLayout>
 

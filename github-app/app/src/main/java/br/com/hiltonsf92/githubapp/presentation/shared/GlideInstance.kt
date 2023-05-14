@@ -5,5 +5,5 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 object GlideInstance : KoinComponent {
-    val glide: RequestManager by inject()
+    val instance: RequestManager by inject()
 }
