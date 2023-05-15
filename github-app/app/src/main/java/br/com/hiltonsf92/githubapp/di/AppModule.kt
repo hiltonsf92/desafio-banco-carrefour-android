@@ -3,10 +3,12 @@ package br.com.hiltonsf92.githubapp.di
 import br.com.hiltonsf92.githubapp.data.repositories.GithubRepositoryImpl
 import br.com.hiltonsf92.githubapp.data.services.GithubService
 import br.com.hiltonsf92.githubapp.data.usecases.GetAllGithubUsers
+import br.com.hiltonsf92.githubapp.data.usecases.GetGithubRepositoriesByLogin
 import br.com.hiltonsf92.githubapp.data.usecases.GetGithubUserByLogin
 import br.com.hiltonsf92.githubapp.domain.usecases.GetUserByLogin
 import br.com.hiltonsf92.githubapp.domain.repositories.UserRepository
 import br.com.hiltonsf92.githubapp.domain.usecases.GetAllUsers
+import br.com.hiltonsf92.githubapp.domain.usecases.GetRepositoriesByLogin
 import br.com.hiltonsf92.githubapp.presentation.viewmodels.UserDetailViewModel
 import br.com.hiltonsf92.githubapp.presentation.viewmodels.UserListViewModel
 import com.bumptech.glide.Glide
@@ -39,11 +41,12 @@ private val repositoriesModule = module {
 private val usecasesModule = module {
     factory<GetAllUsers> { GetAllGithubUsers(get()) }
     factory<GetUserByLogin> { GetGithubUserByLogin(get()) }
+    factory<GetRepositoriesByLogin> { GetGithubRepositoriesByLogin(get()) }
 }
 
 private val viewModelsModule = module {
     viewModel { UserListViewModel(get()) }
-    viewModel { UserDetailViewModel(get()) }
+    viewModel { UserDetailViewModel(get(), get()) }
 }
 
 val appModules = listOf(

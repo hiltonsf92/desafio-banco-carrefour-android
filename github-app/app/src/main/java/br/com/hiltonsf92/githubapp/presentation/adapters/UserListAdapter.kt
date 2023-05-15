@@ -1,5 +1,6 @@
 package br.com.hiltonsf92.githubapp.presentation.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,12 +9,19 @@ import br.com.hiltonsf92.githubapp.domain.entities.User
 import br.com.hiltonsf92.githubapp.presentation.shared.AdapterListener
 
 class UserListAdapter(
-    val mListener: AdapterListener<User>,
-    private val userList: List<User>
+    val mListener: AdapterListener<User>
 ) : RecyclerView.Adapter<UserListAdapter.UserListViewHolder>() {
 
+    var userList: List<User> = mutableListOf()
+        @SuppressLint("NotifyDataSetChanged")
+        set(newUserList) {
+            field = newUserList
+            notifyDataSetChanged()
+        }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListViewHolder {
-        val binding = UserListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            UserListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return UserListViewHolder(binding)
     }
 

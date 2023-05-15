@@ -6,9 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.hiltonsf92.githubapp.R
 import br.com.hiltonsf92.githubapp.databinding.FragmentUserDetailBinding
-import br.com.hiltonsf92.githubapp.domain.entities.User
+import br.com.hiltonsf92.githubapp.domain.entities.Repository
+import br.com.hiltonsf92.githubapp.domain.entities.UserData
+import br.com.hiltonsf92.githubapp.presentation.adapters.RepositoryListAdapter
+import br.com.hiltonsf92.githubapp.presentation.shared.AdapterListener
 import br.com.hiltonsf92.githubapp.presentation.shared.ErrorInfoBottomSheet
 import br.com.hiltonsf92.githubapp.presentation.shared.ErrorInfoBottomSheetHandler
 import br.com.hiltonsf92.githubapp.presentation.shared.hideKeyboard
@@ -16,13 +20,15 @@ import br.com.hiltonsf92.githubapp.presentation.shared.openUrlWithBrowser
 import br.com.hiltonsf92.githubapp.presentation.viewmodels.UserDetailViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class UserDetailFragment : Fragment(), ErrorInfoBottomSheetHandler {
+class UserDetailFragment : Fragment(), AdapterListener<Repository>, ErrorInfoBottomSheetHandler {
     private var _binding: FragmentUserDetailBinding? = null
     private val binding get() = _binding!!
 
     private val userDetailViewModel: UserDetailViewModel by viewModel()
 
     private var login: String? = null
+
+    private val mAdapter: RepositoryListAdapter by lazy { RepositoryListAdapter(this) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,9 +41,9 @@ class UserDetailFragment : Fragment(), ErrorInfoBottomSheetHandler {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.userInfoCard.visibility = View.GONE
+        binding.contentLinearLayout.visibility = View.GONE
         arguments?.getString(LOGIN_KEY)?.let {
-            userDetailViewModel.getUserByLogin(it)
+            loadUserData(it)
             login = it
         }
         setupListeners()
@@ -57,7 +63,7 @@ class UserDetailFragment : Fragment(), ErrorInfoBottomSheetHandler {
 
     private fun performSearch() {
         if (validate()) {
-            userDetailViewModel.getUserByLogin(binding.searchTextField.text.toString())
+            loadUserData(binding.searchTextField.text.toString())
             login = binding.searchTextField.text.toString()
             binding.searchTextField.text = null
             binding.searchTextField.clearFocus()
@@ -85,22 +91,54 @@ class UserDetailFragment : Fragment(), ErrorInfoBottomSheetHandler {
         }
     }
 
-    private fun handleSuccess(user: User) {
-        binding.userInfoCard.fillWithFullUser(user)
-        binding.userInfoCard.visibility = View.VISIBLE
+    private fun loadUserData(login: String) {
+        if (userDetailViewModel.shouldRequestAgain(login)) {
+            binding.contentLinearLayout.visibility = View.GONE
+            userDetailViewModel.getUserByLogin(login)
+        }
+    }
+
+    private fun handleSuccess(data: UserData) {
+        binding.contentLinearLayout.visibility = View.VISIBLE
+        binding.userInfoCard.fillWithFullUser(data.user)
+        setupRepoListAdapter(data.repositories)
         binding.circularProgressIndicator.hide()
     }
 
     private fun handleError(exception: Exception) {
         val bottomSheet = ErrorInfoBottomSheet.newInstance(exception.message)
         bottomSheet.show(childFragmentManager, ErrorInfoBottomSheet.TAG)
+        binding.contentLinearLayout.visibility = View.GONE
         binding.circularProgressIndicator.hide()
+    }
+
+    private fun setupRepoListAdapter(repoList: List<Repository>) {
+        repoList.takeUnless { it.isEmpty() }?.run {
+            mAdapter.repoList = this
+            binding.reposListRecyclerView.apply {
+                adapter = mAdapter
+                layoutManager = LinearLayoutManager(context)
+                setHasFixedSize(true)
+            }.also {
+                binding.titleTextView.visibility = View.VISIBLE
+                binding.reposListRecyclerView.visibility = View.VISIBLE
+                binding.circularProgressIndicator.hide()
+            }
+        } ?: also {
+            binding.titleTextView.visibility = View.GONE
+            binding.reposListRecyclerView.visibility = View.GONE
+            binding.circularProgressIndicator.hide()
+        }
     }
 
     override fun retry() {
         login?.let {
-            userDetailViewModel.getUserByLogin(it)
+            loadUserData(it)
         }
+    }
+
+    override fun performItemClicked(value: Repository) {
+        openUrlWithBrowser(value.url)
     }
 
     override fun onDestroyView() {

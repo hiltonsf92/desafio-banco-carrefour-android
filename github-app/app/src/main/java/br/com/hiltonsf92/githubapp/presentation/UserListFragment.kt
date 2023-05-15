@@ -26,6 +26,8 @@ class UserListFragment : Fragment(), AdapterListener<User>, ErrorInfoBottomSheet
 
     private val userListViewModel: UserListViewModel by viewModel()
 
+    private val mAdapter: UserListAdapter by lazy { UserListAdapter(this) }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -53,8 +55,9 @@ class UserListFragment : Fragment(), AdapterListener<User>, ErrorInfoBottomSheet
     }
 
     private fun setupUserListAdapter(userList: List<User>) {
+        mAdapter.userList = userList
         binding.userListRecyclerView.apply {
-            adapter = UserListAdapter(this@UserListFragment, userList)
+            adapter = mAdapter
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
         }.also {

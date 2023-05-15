@@ -1,7 +1,9 @@
 package br.com.hiltonsf92.githubapp.data.repositories
 
 import br.com.hiltonsf92.githubapp.data.services.GithubService
+import br.com.hiltonsf92.githubapp.domain.entities.Repository
 import br.com.hiltonsf92.githubapp.domain.entities.User
+import br.com.hiltonsf92.githubapp.domain.exceptions.RepositoryListException
 import br.com.hiltonsf92.githubapp.domain.exceptions.UserDetailException
 import br.com.hiltonsf92.githubapp.domain.exceptions.UserListException
 import br.com.hiltonsf92.githubapp.domain.repositories.UserRepository
@@ -27,8 +29,18 @@ class GithubRepositoryImpl(
         throw UserDetailException(USER_DETAIL_EXCEPTION)
     }
 
+    override suspend fun getRepositoriesByLogin(login: String): List<Repository> {
+        val response = service.getRepositoriesByLogin(login)
+        if (response.isSuccessful) {
+            val repoList = response.body() ?: listOf()
+            return repoList.map { it.toEntity() }
+        }
+        throw RepositoryListException(REPOSITORY_LIST_EXCEPTION)
+    }
+
     companion object {
         private const val USER_LIST_EXCEPTION = "Unable to load users"
         private const val USER_DETAIL_EXCEPTION = "Unable to load this user's data"
+        private const val REPOSITORY_LIST_EXCEPTION = "Unable to load repos"
     }
 }
