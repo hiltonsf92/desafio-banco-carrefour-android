@@ -5,8 +5,8 @@
     <string name="user_info_card_button">Visit</string>
     <string name="user_detail_title">User detail</string>
     <string name="user_detail_search_hint">Search</string>
-    <string name="user_detail_search_prefix">\@</string>
     <string name="user_login_placeholder">\@%1$s</string>
-    <string name="user_detail_search_error">Cannot be empty</string>
+    <string name="user_detail_search_error">Invalid search</string>
     <string name="user_detail_repositories_title">Repositories</string>
+    <string name="bottom_sheet_error_info_button">Close</string>
 </resources>

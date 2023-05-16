@@ -1,14 +1,16 @@
 package br.com.hiltonsf92.githubapp.di
 
-import br.com.hiltonsf92.githubapp.data.repositories.GithubRepositoryImpl
-import br.com.hiltonsf92.githubapp.data.services.GithubService
-import br.com.hiltonsf92.githubapp.data.usecases.GetAllGithubUsers
-import br.com.hiltonsf92.githubapp.data.usecases.GetGithubRepositoriesByLogin
-import br.com.hiltonsf92.githubapp.data.usecases.GetGithubUserByLogin
-import br.com.hiltonsf92.githubapp.domain.usecases.GetUserByLogin
+import br.com.hiltonsf92.githubapp.data.datasources.UserDatasource
+import br.com.hiltonsf92.githubapp.data.repositories.UserRepositoryImpl
 import br.com.hiltonsf92.githubapp.domain.repositories.UserRepository
-import br.com.hiltonsf92.githubapp.domain.usecases.GetAllUsers
-import br.com.hiltonsf92.githubapp.domain.usecases.GetRepositoriesByLogin
+import br.com.hiltonsf92.githubapp.domain.usecases.GetRepositories
+import br.com.hiltonsf92.githubapp.domain.usecases.GetRepositoriesImpl
+import br.com.hiltonsf92.githubapp.domain.usecases.GetUser
+import br.com.hiltonsf92.githubapp.domain.usecases.GetUserImpl
+import br.com.hiltonsf92.githubapp.domain.usecases.GetUsers
+import br.com.hiltonsf92.githubapp.domain.usecases.GetUsersImpl
+import br.com.hiltonsf92.githubapp.domain.usecases.SearchUser
+import br.com.hiltonsf92.githubapp.domain.usecases.SearchUserImpl
 import br.com.hiltonsf92.githubapp.presentation.viewmodels.UserDetailViewModel
 import br.com.hiltonsf92.githubapp.presentation.viewmodels.UserListViewModel
 import com.bumptech.glide.Glide
@@ -27,7 +29,7 @@ private val retrofitModule = module {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-    single<GithubService> { get<Retrofit>().create(GithubService::class.java) }
+    single<UserDatasource> { get<Retrofit>().create(UserDatasource::class.java) }
 }
 
 private val glideModule = module {
@@ -35,17 +37,18 @@ private val glideModule = module {
 }
 
 private val repositoriesModule = module {
-    factory<UserRepository> { GithubRepositoryImpl(get()) }
+    factory<UserRepository> { UserRepositoryImpl(get()) }
 }
 
 private val usecasesModule = module {
-    factory<GetAllUsers> { GetAllGithubUsers(get()) }
-    factory<GetUserByLogin> { GetGithubUserByLogin(get()) }
-    factory<GetRepositoriesByLogin> { GetGithubRepositoriesByLogin(get()) }
+    factory<GetUsers> { GetUsersImpl(get()) }
+    factory<GetUser> { GetUserImpl(get()) }
+    factory<GetRepositories> { GetRepositoriesImpl(get()) }
+    factory<SearchUser> { SearchUserImpl(get()) }
 }
 
 private val viewModelsModule = module {
-    viewModel { UserListViewModel(get()) }
+    viewModel { UserListViewModel(get(), get()) }
     viewModel { UserDetailViewModel(get(), get()) }
 }
 

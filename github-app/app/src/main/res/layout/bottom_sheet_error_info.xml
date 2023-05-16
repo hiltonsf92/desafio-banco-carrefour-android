@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Material3.BottomSheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/Widget.Material3.BottomSheet"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <LinearLayout
@@ -14,20 +14,20 @@
         android:minHeight="150dp"
         android:orientation="vertical"
         android:padding="15dp">
+
         <TextView
             android:id="@+id/messageTextView"
-            tools:text="Error message"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            tools:text="Error message" />
 
         <Button
-            android:id="@+id/retryButton"
+            android:id="@+id/actionButton"
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Tentar novamente" />
+            android:text="@string/bottom_sheet_error_info_button" />
 
     </LinearLayout>
-
 </FrameLayout>

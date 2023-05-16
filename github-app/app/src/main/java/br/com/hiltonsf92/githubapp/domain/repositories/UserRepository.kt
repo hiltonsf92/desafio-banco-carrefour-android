@@ -4,7 +4,8 @@ import br.com.hiltonsf92.githubapp.domain.entities.Repository
 import br.com.hiltonsf92.githubapp.domain.entities.User
 
 interface UserRepository {
-    suspend fun getAllUsers(): List<User>
-    suspend fun getUserByLogin(login: String): User
-    suspend fun getRepositoriesByLogin(login: String): List<Repository>
+    suspend fun getUsers(): List<User>
+    suspend fun getUser(login: String): User
+    suspend fun getRepositories(login: String): List<Repository>
+    suspend fun searchUser(query: String): List<User>
 }

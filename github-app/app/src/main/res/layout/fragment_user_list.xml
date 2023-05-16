@@ -1,33 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:fillViewport="true">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/userListRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        tools:itemCount="5"
-        tools:listitem="@layout/user_list_item"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/circularProgressIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@id/userListRecyclerView"
-        app:layout_constraintEnd_toEndOf="@id/userListRecyclerView"
-        app:layout_constraintStart_toStartOf="@id/userListRecyclerView"
-        app:layout_constraintTop_toTopOf="@id/userListRecyclerView" />
+        <LinearLayout
+            android:id="@+id/contentLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/searchTextLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="15dp"
+                android:hint="@string/user_detail_search_hint"
+                app:endIconDrawable="@drawable/ic_search_24"
+                app:endIconMode="custom"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/searchTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/userListRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/searchTextLayout"
+                tools:itemCount="3"
+                tools:listitem="@layout/user_list_item" />
+
+        </LinearLayout>
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/circularProgressIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

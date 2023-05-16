@@ -8,8 +8,8 @@ import androidx.core.os.bundleOf
 import br.com.hiltonsf92.githubapp.databinding.BottomSheetErrorInfoBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-interface ErrorInfoBottomSheetHandler {
-    fun retry()
+interface ErrorInfoBottomSheetAction {
+    fun onAction(action: String)
 }
 
 class ErrorInfoBottomSheet : BottomSheetDialogFragment() {
@@ -28,9 +28,10 @@ class ErrorInfoBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val message = arguments?.getString(MESSAGE) ?: DEFAULT_MESSAGE
+        val action = arguments?.getString(ACTION) ?: CLOSE_ACTION
         binding.messageTextView.text = message
-        binding.retryButton.setOnClickListener {
-            (parentFragment as? ErrorInfoBottomSheetHandler)?.retry()
+        binding.actionButton.setOnClickListener {
+            (parentFragment as? ErrorInfoBottomSheetAction)?.onAction(action)
             dismiss()
         }
     }
@@ -42,12 +43,15 @@ class ErrorInfoBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "ErrorInfoBottomSheet"
-        private const val DEFAULT_MESSAGE = "Erro ao processar requisição"
+        private const val DEFAULT_MESSAGE = "Error processing request"
         private const val MESSAGE = "message"
-        fun newInstance(message: String? = null): ErrorInfoBottomSheet =
+        private const val ACTION = "action"
+        const val CLOSE_ACTION = "close"
+
+        fun newInstance(message: String? = null, action: String? = null): ErrorInfoBottomSheet =
             ErrorInfoBottomSheet().apply {
                 isCancelable = false
-                arguments = bundleOf(MESSAGE to message)
+                arguments = bundleOf(MESSAGE to message, ACTION to action)
             }
     }
 }

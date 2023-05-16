@@ -3,27 +3,26 @@ package br.com.hiltonsf92.githubapp.presentation.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.hiltonsf92.githubapp.domain.entities.User
 import br.com.hiltonsf92.githubapp.domain.entities.UserData
-import br.com.hiltonsf92.githubapp.domain.usecases.GetRepositoriesByLogin
-import br.com.hiltonsf92.githubapp.domain.usecases.GetUserByLogin
+import br.com.hiltonsf92.githubapp.domain.usecases.GetRepositories
+import br.com.hiltonsf92.githubapp.domain.usecases.GetUser
 import br.com.hiltonsf92.githubapp.presentation.shared.State
 import kotlinx.coroutines.launch
 
 class UserDetailViewModel(
-    private val GetUserByLogin: GetUserByLogin,
-    private val GetRepositoriesByLogin: GetRepositoriesByLogin
+    private val GetUser: GetUser,
+    private val GetRepositories: GetRepositories
 ) : ViewModel() {
 
     private val _userState = MutableLiveData<State<UserData>>()
     val userState get() = _userState
 
-    fun getUserByLogin(login: String) {
+    fun getUserData(login: String) {
         viewModelScope.launch {
             try {
                 _userState.postValue(State.Loading)
-                val user = GetUserByLogin(login)
-                val repos = GetRepositoriesByLogin(login)
+                val user = GetUser(login)
+                val repos = GetRepositories(login)
                 _userState.postValue(State.Success(UserData(user, repos)))
             } catch (e: Exception) {
                 _userState.postValue(State.Error(e))

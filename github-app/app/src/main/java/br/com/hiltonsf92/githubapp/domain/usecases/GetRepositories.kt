@@ -1,13 +1,16 @@
-package br.com.hiltonsf92.githubapp.data.usecases
+package br.com.hiltonsf92.githubapp.domain.usecases
 
 import br.com.hiltonsf92.githubapp.domain.entities.Repository
 import br.com.hiltonsf92.githubapp.domain.repositories.UserRepository
-import br.com.hiltonsf92.githubapp.domain.usecases.GetRepositoriesByLogin
 
-class GetGithubRepositoriesByLogin(
+interface GetRepositories {
+    suspend operator fun invoke(login: String): List<Repository>
+}
+
+class GetRepositoriesImpl(
     private val repository: UserRepository
-) : GetRepositoriesByLogin {
+) : GetRepositories {
     override suspend fun invoke(login: String): List<Repository> {
-        return repository.getRepositoriesByLogin(login)
+        return repository.getRepositories(login)
     }
 }
