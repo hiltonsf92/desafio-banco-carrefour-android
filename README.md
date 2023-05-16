@@ -25,6 +25,12 @@ A arquitetura utilizada para organizar o app como um todo foi a Clean Architectu
 
 ## :camera_flash: Telas do app
 
+<div style="display: flex;">
+  <img src="/images/user_list.jpg" style="width: 200px; height: 400px" alt="User list" />
+  <img src="/images/user_detail.jpg" style="width: 200px; height: 400px" alt="User detail" />
+  <img src="/images/error_message.jpg" style="width: 200px; height: 400px" alt="Error message" />
+</div>
+
 [^1]: [API Github.](https://developer.github.com/v3/)
 [^2]: [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 [^3]: [MVVM](https://learn.microsoft.com/pt-br/windows/uwp/data-binding/data-binding-and-mvvm)
