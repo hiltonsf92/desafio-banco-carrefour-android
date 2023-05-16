@@ -8,11 +8,11 @@ pública do Github. [^1]
 
 1. Listar todos os usuários.
 2. Buscar informações referentes ao usuário bem como seus repositórios.
-3. O sistema deve exibir feedbacks do status atual das requisições(Ok, Loading e Erro).
+3. O sistema deve exibir feedbacks do status atual das requisições(Success, Loading e Error).
 
 ## :clipboard: Arquitetura
 
-A arquitetura utilizada para organizar o app como um todo foi a Clean Architecture [^2] adaptada ao contexto mobile. O padrão arquitetural MVVM [^3] foi utilizado na camada de apresentação para desacoplar a view das regras da aplicação.
+A arquitetura utilizada para organizar o app como um todo foi a Clean Architecture [^2]. O padrão arquitetural MVVM [^3] foi utilizado na camada de apresentação para desacoplar a view das regras da aplicação.
 
 ## :books: Bibliotecas
 
