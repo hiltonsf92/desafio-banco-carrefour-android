@@ -1,5 +1,6 @@
 package br.com.hiltonsf92.githubapp.di
 
+import android.content.Context
 import br.com.hiltonsf92.githubapp.data.datasources.UserDatasource
 import br.com.hiltonsf92.githubapp.data.repositories.UserRepositoryImpl
 import br.com.hiltonsf92.githubapp.domain.repositories.UserRepository
@@ -11,51 +12,66 @@ import br.com.hiltonsf92.githubapp.domain.usecases.GetUsers
 import br.com.hiltonsf92.githubapp.domain.usecases.GetUsersImpl
 import br.com.hiltonsf92.githubapp.domain.usecases.SearchUser
 import br.com.hiltonsf92.githubapp.domain.usecases.SearchUserImpl
-import br.com.hiltonsf92.githubapp.presentation.viewmodels.UserDetailViewModel
-import br.com.hiltonsf92.githubapp.presentation.viewmodels.UserListViewModel
 import com.bumptech.glide.Glide
-import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.module
+import com.bumptech.glide.RequestManager
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
-private const val BASE_URL = "https://api.github.com/"
+@Module
+@InstallIn(SingletonComponent::class)
+class AppModule {
 
-private val retrofitModule = module {
-    single<Retrofit> {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    @Singleton
+    @Provides
+    fun provideRetrofit(): Retrofit {
+        return Retrofit.Builder().baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create()).build()
     }
-    single<UserDatasource> { get<Retrofit>().create(UserDatasource::class.java) }
-}
 
-private val glideModule = module {
-    single { Glide.with(androidContext()) }
-}
+    @Singleton
+    @Provides
+    fun provideGlide(@ApplicationContext context: Context): RequestManager {
+        return Glide.with(context)
+    }
 
-private val repositoriesModule = module {
-    factory<UserRepository> { UserRepositoryImpl(get()) }
-}
+    @Singleton
+    @Provides
+    fun provideUserDatasource(retrofit: Retrofit): UserDatasource {
+        return retrofit.create(UserDatasource::class.java)
+    }
 
-private val usecasesModule = module {
-    factory<GetUsers> { GetUsersImpl(get()) }
-    factory<GetUser> { GetUserImpl(get()) }
-    factory<GetRepositories> { GetRepositoriesImpl(get()) }
-    factory<SearchUser> { SearchUserImpl(get()) }
-}
+    @Provides
+    fun provideUserRepository(datasource: UserDatasource): UserRepository {
+        return UserRepositoryImpl(datasource)
+    }
 
-private val viewModelsModule = module {
-    viewModel { UserListViewModel(get(), get()) }
-    viewModel { UserDetailViewModel(get(), get()) }
-}
+    @Provides
+    fun provideGetUsersUseCase(repository: UserRepository): GetUsers {
+        return GetUsersImpl(repository)
+    }
 
-val appModules = listOf(
-    retrofitModule,
-    glideModule,
-    repositoriesModule,
-    usecasesModule,
-    viewModelsModule
-)
+    @Provides
+    fun provideGetUserUseCase(repository: UserRepository): GetUser {
+        return GetUserImpl(repository)
+    }
+
+    @Provides
+    fun provideGetRepositoriesUseCase(repository: UserRepository): GetRepositories {
+        return GetRepositoriesImpl(repository)
+    }
+
+    @Provides
+    fun provideSearchUserUseCase(repository: UserRepository): SearchUser {
+        return SearchUserImpl(repository)
+    }
+
+    companion object {
+        private const val BASE_URL = "https://api.github.com/"
+    }
+}

@@ -7,11 +7,14 @@ import br.com.hiltonsf92.githubapp.domain.entities.UserData
 import br.com.hiltonsf92.githubapp.domain.usecases.GetRepositories
 import br.com.hiltonsf92.githubapp.domain.usecases.GetUser
 import br.com.hiltonsf92.githubapp.presentation.shared.State
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserDetailViewModel(
-    private val GetUser: GetUser,
-    private val GetRepositories: GetRepositories
+@HiltViewModel
+class UserDetailViewModel @Inject constructor(
+    val GetUser: GetUser,
+    val GetRepositories: GetRepositories
 ) : ViewModel() {
 
     private val _userState = MutableLiveData<State<UserData>>()

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.hiltonsf92.githubapp.databinding.FragmentUserDetailBinding
@@ -17,13 +18,14 @@ import br.com.hiltonsf92.githubapp.presentation.shared.ErrorInfoBottomSheet.Comp
 import br.com.hiltonsf92.githubapp.presentation.shared.ErrorInfoBottomSheetAction
 import br.com.hiltonsf92.githubapp.presentation.shared.openUrlWithBrowser
 import br.com.hiltonsf92.githubapp.presentation.viewmodels.UserDetailViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class UserDetailFragment : Fragment(), AdapterListener<Repository>, ErrorInfoBottomSheetAction {
     private var _binding: FragmentUserDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val userDetailViewModel: UserDetailViewModel by viewModel()
+    private val userDetailViewModel: UserDetailViewModel by viewModels()
 
     private val mAdapter: RepositoryListAdapter by lazy { RepositoryListAdapter(this) }
 
@@ -53,11 +55,9 @@ class UserDetailFragment : Fragment(), AdapterListener<Repository>, ErrorInfoBot
     private fun setupObservers() {
         userDetailViewModel.userState.removeObservers(this)
         userDetailViewModel.userState.observe(viewLifecycleOwner) { state ->
-            state.handle(
-                loading = { binding.circularProgressIndicator.show() },
+            state.handle(loading = { binding.circularProgressIndicator.show() },
                 success = { handleSuccess(it) },
-                error = { handleError(it) }
-            )
+                error = { handleError(it) })
         }
     }
 

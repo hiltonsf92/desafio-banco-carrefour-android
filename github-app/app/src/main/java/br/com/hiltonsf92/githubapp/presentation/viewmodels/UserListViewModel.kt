@@ -7,11 +7,14 @@ import br.com.hiltonsf92.githubapp.domain.entities.User
 import br.com.hiltonsf92.githubapp.domain.usecases.GetUsers
 import br.com.hiltonsf92.githubapp.domain.usecases.SearchUser
 import br.com.hiltonsf92.githubapp.presentation.shared.State
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserListViewModel(
-    private val GetUsers: GetUsers,
-    private val SearchUser: SearchUser
+@HiltViewModel
+class UserListViewModel @Inject constructor(
+    val GetUsers: GetUsers,
+    val SearchUser: SearchUser
 ) : ViewModel() {
 
     private val _userListState = MutableLiveData<State<List<User>>>()

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.hiltonsf92.githubapp.R
@@ -19,15 +20,16 @@ import br.com.hiltonsf92.githubapp.presentation.shared.ErrorInfoBottomSheet.Comp
 import br.com.hiltonsf92.githubapp.presentation.shared.ErrorInfoBottomSheetAction
 import br.com.hiltonsf92.githubapp.presentation.shared.hideKeyboard
 import br.com.hiltonsf92.githubapp.presentation.viewmodels.UserListViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 const val LOGIN_KEY = "login"
 
+@AndroidEntryPoint
 class UserListFragment : Fragment(), AdapterListener<User>, ErrorInfoBottomSheetAction {
     private var _binding: FragmentUserListBinding? = null
     private val binding get() = _binding!!
 
-    private val userListViewModel: UserListViewModel by viewModel()
+    private val userListViewModel: UserListViewModel by viewModels()
 
     private var mAdapter: UserListAdapter? = null
 

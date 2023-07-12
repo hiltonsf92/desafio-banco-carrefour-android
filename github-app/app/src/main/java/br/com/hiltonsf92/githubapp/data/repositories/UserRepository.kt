@@ -8,9 +8,10 @@ import br.com.hiltonsf92.githubapp.domain.exceptions.SearchUserException
 import br.com.hiltonsf92.githubapp.domain.exceptions.UserException
 import br.com.hiltonsf92.githubapp.domain.exceptions.UsersException
 import br.com.hiltonsf92.githubapp.domain.repositories.UserRepository
+import javax.inject.Inject
 
-class UserRepositoryImpl(
-    private val datasource: UserDatasource
+class UserRepositoryImpl @Inject constructor(
+    val datasource: UserDatasource
 ) : UserRepository {
     override suspend fun getUsers(): List<User> {
         val response = datasource.getUsers()
@@ -24,8 +25,7 @@ class UserRepositoryImpl(
     override suspend fun getUser(login: String): User {
         val response = datasource.getUser(login)
         if (response.isSuccessful) {
-            return response.body()?.toEntity()
-                ?: throw UserException(USER_EXCEPTION)
+            return response.body()?.toEntity() ?: throw UserException(USER_EXCEPTION)
         }
         throw UserException(USER_EXCEPTION)
     }

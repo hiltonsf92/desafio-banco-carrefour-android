@@ -8,8 +8,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import br.com.hiltonsf92.githubapp.R
 import br.com.hiltonsf92.githubapp.databinding.LayoutUserInfoCardBinding
 import br.com.hiltonsf92.githubapp.domain.entities.User
-import br.com.hiltonsf92.githubapp.presentation.shared.loadFromUrl
+import com.bumptech.glide.RequestManager
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class UserInfoCard @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -20,9 +23,12 @@ class UserInfoCard @JvmOverloads constructor(
 
     private var mButtonClickListener: ((url: String?) -> Unit)? = null
 
+    @Inject
+    lateinit var glide: RequestManager
+
     fun fillWithUser(user: User) {
         user.run {
-            binding.imageView.loadFromUrl(avatarUrl)
+            loadFromUrl(avatarUrl)
             binding.loginTextView.text = context.getString(R.string.user_login_placeholder, login)
             binding.nameTextView.visibility = View.GONE
             binding.locationTextView.visibility = View.GONE
@@ -33,7 +39,7 @@ class UserInfoCard @JvmOverloads constructor(
 
     fun fillWithFullUser(user: User) {
         user.run {
-            binding.imageView.loadFromUrl(avatarUrl)
+            loadFromUrl(avatarUrl)
             binding.loginTextView.text = context.getString(R.string.user_login_placeholder, login)
             binding.nameTextView.text = name
             binding.locationTextView.text = location
@@ -42,6 +48,10 @@ class UserInfoCard @JvmOverloads constructor(
                 mButtonClickListener?.invoke(url)
             }
         }
+    }
+
+    private fun loadFromUrl(url: String) {
+        glide.load(url).into(binding.imageView)
     }
 
     override fun setOnClickListener(mListener: OnClickListener?) {
