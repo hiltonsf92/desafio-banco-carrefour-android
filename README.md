@@ -17,7 +17,7 @@ A arquitetura utilizada para organizar o app como um todo foi a Clean Architectu
 ## :books: Bibliotecas
 
 - Material 3 - construção do layout.
-- Koin - injeção de dependência.
+- Dagger Hilt - injeção de dependência.
 - Jetpack Navigation - navegação do app.
 - Glide - carregamento assíncrono de imagens.
 - Corrotinas - processamento assíncrono.
