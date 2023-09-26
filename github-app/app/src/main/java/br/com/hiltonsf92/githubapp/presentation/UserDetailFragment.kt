@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.hiltonsf92.githubapp.databinding.FragmentUserDetailBinding
@@ -17,6 +20,7 @@ import br.com.hiltonsf92.githubapp.presentation.shared.ErrorInfoBottomSheet.Comp
 import br.com.hiltonsf92.githubapp.presentation.shared.ErrorInfoBottomSheetAction
 import br.com.hiltonsf92.githubapp.presentation.shared.openUrlWithBrowser
 import br.com.hiltonsf92.githubapp.presentation.viewmodels.UserDetailViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UserDetailFragment : Fragment(), AdapterListener<Repository>, ErrorInfoBottomSheetAction {
@@ -51,22 +55,23 @@ class UserDetailFragment : Fragment(), AdapterListener<Repository>, ErrorInfoBot
     }
 
     private fun setupObservers() {
-        userDetailViewModel.userState.removeObservers(this)
-        userDetailViewModel.userState.observe(viewLifecycleOwner) { state ->
-            state.handle(
-                loading = { binding.circularProgressIndicator.show() },
-                success = { handleSuccess(it) },
-                error = { handleError(it) }
-            )
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userDetailViewModel.userStateFlow.collect { state ->
+                    state.handle(
+                        loading = { binding.circularProgressIndicator.show() },
+                        success = { handleSuccess(it) },
+                        error = { handleError(it) }
+                    )
+                }
+            }
         }
     }
 
     private fun loadUserData() {
         arguments?.getString(LOGIN_KEY)?.let {
-            if (userDetailViewModel.shouldRequestAgain(it)) {
-                userDetailViewModel.getUserData(it)
-                binding.contentLinearLayout.visibility = View.GONE
-            }
+            userDetailViewModel.getUserData(it)
+            binding.contentLinearLayout.visibility = View.GONE
         }
     }
 
