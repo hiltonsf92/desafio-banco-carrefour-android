@@ -1,12 +1,13 @@
 package br.com.hiltonsf92.githubapp.presentation.viewmodels
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.hiltonsf92.githubapp.domain.entities.User
 import br.com.hiltonsf92.githubapp.domain.usecases.GetUsers
 import br.com.hiltonsf92.githubapp.domain.usecases.SearchUser
 import br.com.hiltonsf92.githubapp.presentation.shared.State
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class UserListViewModel(
@@ -14,41 +15,36 @@ class UserListViewModel(
     private val SearchUser: SearchUser
 ) : ViewModel() {
 
-    private val _userListState = MutableLiveData<State<List<User>>>()
-    val userListState get() = _userListState
-
-    private var _lastQuery: String? = null
-    val lastQuery: String? = _lastQuery
+    private val _userListStateFlow = MutableStateFlow<State<List<User>>>(State.Success(emptyList()))
+    val userListStateFlow: StateFlow<State<List<User>>> get() = _userListStateFlow
 
     fun getAllUsers() {
         viewModelScope.launch {
             try {
-                _userListState.postValue(State.Loading)
-                val users = GetUsers()
-                _userListState.postValue(State.Success(users))
+                _userListStateFlow.value = State.Loading
+                val userList = GetUsers()
+                _userListStateFlow.value = State.Success(userList)
             } catch (e: Exception) {
-                _userListState.postValue(State.Error(e))
+                _userListStateFlow.value = State.Error(e)
             }
         }
     }
 
-    fun searchUser(query: String) {
-        _lastQuery = query
+    fun searchUser(login: String) {
         viewModelScope.launch {
             try {
-                _userListState.postValue(State.Loading)
-                val users = SearchUser(query)
-                _userListState.postValue(State.Success(users))
+                _userListStateFlow.value = State.Loading
+                val userList = SearchUser(login)
+                _userListStateFlow.value = State.Success(userList)
             } catch (e: Exception) {
-                _userListState.postValue(State.Error(e))
+                _userListStateFlow.value = State.Error(e)
             }
         }
     }
 
-    fun shouldRequestAgain() =
-        _userListState.value == null || _userListState.value?.hasError() == true
-
-    fun isInvalidQuery(query: String): Boolean {
-        return query.isEmpty() || _lastQuery?.lowercase() == query.lowercase()
+    fun shouldRequestAgain(): Boolean {
+        return _userListStateFlow.value.state?.run { this as? List<*> }.let {
+            it?.isEmpty() ?: true
+        }
     }
 }

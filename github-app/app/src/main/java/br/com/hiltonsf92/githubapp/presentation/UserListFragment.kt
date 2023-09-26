@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.hiltonsf92.githubapp.R
@@ -19,6 +22,7 @@ import br.com.hiltonsf92.githubapp.presentation.shared.ErrorInfoBottomSheet.Comp
 import br.com.hiltonsf92.githubapp.presentation.shared.ErrorInfoBottomSheetAction
 import br.com.hiltonsf92.githubapp.presentation.shared.hideKeyboard
 import br.com.hiltonsf92.githubapp.presentation.viewmodels.UserListViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val LOGIN_KEY = "login"
@@ -66,7 +70,7 @@ class UserListFragment : Fragment(), AdapterListener<User>, ErrorInfoBottomSheet
     }
 
     private fun validate(): Boolean {
-        if (userListViewModel.isInvalidQuery(binding.searchTextField.text.toString())) {
+        if (binding.searchTextField.text.toString().isEmpty()) {
             binding.searchTextLayout.error = getString(R.string.user_detail_search_error)
             return false
         }
@@ -75,13 +79,16 @@ class UserListFragment : Fragment(), AdapterListener<User>, ErrorInfoBottomSheet
     }
 
     private fun setupObservers() {
-        userListViewModel.userListState.removeObservers(viewLifecycleOwner)
-        userListViewModel.userListState.observe(viewLifecycleOwner) { state ->
-            state.handle(
-                loading = { binding.circularProgressIndicator.show() },
-                success = { handleSuccess(it) },
-                error = { handleError(it) }
-            )
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userListViewModel.userListStateFlow.collect { state ->
+                    state.handle(
+                        loading = { binding.circularProgressIndicator.show() },
+                        success = { handleSuccess(it) },
+                        error = { handleError(it) }
+                    )
+                }
+            }
         }
     }
 
@@ -108,9 +115,11 @@ class UserListFragment : Fragment(), AdapterListener<User>, ErrorInfoBottomSheet
     }
 
     private fun loadUsers() {
-        binding.searchTextField.setText(userListViewModel.lastQuery)
+        binding.searchTextField.text = null
         if (userListViewModel.shouldRequestAgain()) {
-            userListViewModel.getAllUsers()
+            lifecycleScope.launch {
+                userListViewModel.getAllUsers()
+            }
             binding.contentLinearLayout.visibility = View.GONE
         }
     }
