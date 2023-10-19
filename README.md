@@ -31,6 +31,11 @@ A arquitetura utilizada para organizar o app como um todo foi a Clean Architectu
   <img src="/images/error_message.jpg" style="width: 200px; height: 400px" alt="Error message" />
 </div>
 
+## :arrows_clockwise: Outras branches
+
+- **hilt-di:** Implementação utilizando Jetpack Hilt como sistema de injeção de dependências.
+- **state-flow:** Implementação de reatividade com Stateflow.
+
 [^1]: [API Github.](https://developer.github.com/v3/)
 [^2]: [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 [^3]: [MVVM](https://learn.microsoft.com/pt-br/windows/uwp/data-binding/data-binding-and-mvvm)
